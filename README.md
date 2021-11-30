@@ -1,5 +1,6 @@
 # ReportBuilder
 This project is used for analyzing pdf files from given folder. 
+
 Features:
 - Reading measurements of all pages from all the pdf files in the folder
 - Checking if pdf page has colors or not
