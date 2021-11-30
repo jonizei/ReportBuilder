@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<settings>
+    <!-- Polku kansioon, josta raportti luodaan -->
+    <source></source>
+    <!-- Polku kansioon, johon raportti luodaan -->
+    <destination></destination>
+    <!-- Raportti tiedoston nimi -->
+    <reportname></reportname>
+    <!-- Tarkistetaanko sivun väri true/false -->
+    <ignore-color>false</ignore-color>
+    <!-- Korkeuden toleranssi millimetreinä -->
+    <height-threshold>50</height-threshold>
+    <!-- Leveyden toleranssi millimetreinä -->
+    <width-threshold>50</width-threshold>
+    <!-- Väri toleranssi -->
+    <!-- Kertoo kuinka suuri erotus punaisella, virheällä ja sinisellä 
+    saa olla toisistaan. Jos toleranssi on suuri niin jotkut värisävyt
+    luetaan mustavalkoisena -->
+    <color-threshold>5</color-threshold>
+
+    <!-- Käytettävät raportti kategoriat -->
+    <paper-settings>
+        <paper-categories>
+            <paper-category>
+                <name>30</name>
+                <height>297</height>
+            </paper-category>
+            <paper-category>
+                <name>60</name>
+                <height>594</height>
+            </paper-category>
+            <paper-category>
+                <name>90</name>
+                <height>891</height>
+            </paper-category>
+        </paper-categories>
+
+        <!-- Käytettävät paperi pituudet -->
+        <paper-widths>
+            <paper-width>210</paper-width>
+            <paper-width>216</paper-width>
+            <paper-width>420</paper-width>
+            <paper-width>630</paper-width>
+            <paper-width>840</paper-width>
+            <paper-width>1050</paper-width>
+            <paper-width>1260</paper-width>
+            <paper-width>1470</paper-width>
+            <paper-width>1680</paper-width>
+            <paper-width>1890</paper-width>
+            <paper-width>2100</paper-width>
+            <paper-width>2310</paper-width>
+            <paper-width>2530</paper-width>
+            <paper-width>2740</paper-width>
+            <paper-width>2950</paper-width>
+        </paper-widths>
+
+        <!-- Nimetyt paperi koot -->
+        <named-papers>
+            <paper>
+                <name>A4</name>
+                <height>297</height>
+                <width>210</width>
+            </paper>
+            <paper>
+                <name>A3</name>
+                <height>297</height>
+                <width>420</width>
+            </paper>
+            <paper>
+                <name>LETTER</name>
+                <height>297</height>
+                <width>216</width>
+            </paper>
+        </named-papers>
+
+    </paper-settings>
+
+</settings>

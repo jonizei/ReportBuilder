@@ -1,0 +1,12 @@
+com\github\jonizei\reportbuilder\utils\PaperCategory.class
+com\github\jonizei\reportbuilder\builder\PdfFileEntry.class
+com\github\jonizei\reportbuilder\builder\SettingsReader.class
+com\github\jonizei\reportbuilder\builder\ReportBuilder$PageColor.class
+com\github\jonizei\reportbuilder\utils\PaperSizeLibrary.class
+com\github\jonizei\reportbuilder\builder\FileEntry.class
+com\github\jonizei\reportbuilder\Main.class
+com\github\jonizei\reportbuilder\utils\Utilities.class
+com\github\jonizei\reportbuilder\builder\PdfPageEntry.class
+com\github\jonizei\reportbuilder\builder\ReportBuilder.class
+com\github\jonizei\reportbuilder\utils\PaperSizeLibrary$NamedPaper.class
+com\github\jonizei\reportbuilder\utils\PdfPageCropper.class
