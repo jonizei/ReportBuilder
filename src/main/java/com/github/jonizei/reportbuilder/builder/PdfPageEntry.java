@@ -11,8 +11,10 @@ import com.github.jonizei.reportbuilder.utils.Utilities;
 import java.util.Arrays;
 
 /**
- *
+ * This class contains all necessary information of a pdf file
+ * 
  * @author Joni
+ * @version 2021-12-03
  */
 public class PdfPageEntry implements Comparable<PdfPageEntry> {
     

@@ -13,11 +13,18 @@ import java.text.DecimalFormat;
 import java.util.Scanner;
 
 /**
- *
+ * This class handles the execution of the program
+ * 
  * @author Joni
+ * @version 2021-12-03
  */
 public class Main {
     
+    /**
+     * 
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
         
         Scanner scan = new Scanner(System.in);

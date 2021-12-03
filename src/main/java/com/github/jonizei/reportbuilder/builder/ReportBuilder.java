@@ -34,15 +34,31 @@ import org.ghost4j.document.PDFDocument;
 import org.ghost4j.renderer.SimpleRenderer;
 
 /**
- *
+ * This class processes all the files in the given source folder
+ * 
  * @author Joni
+ * @version 2021-12-03
  */
 public class ReportBuilder {
     
+    /**
+     * Class that contains all the paper sizes used in this program
+     */
     private PaperSizeLibrary sizeLibrary;
+    
+    /**
+     * Class that is used to crop all the pdf pages
+     */
     private PdfPageCropper pageCropper;
+    
+    /**
+     * Boolean which enables or disables pdf page color checking
+     */
     private boolean ignoreColor;
     
+    /**
+     * Enum that is used for telling the color state of the pdf page
+     */
     public enum PageColor {
         ALL
         , ERROR
@@ -50,13 +66,39 @@ public class ReportBuilder {
         , COLORED
     }
     
+    /**
+     * Height threshold. Used when assigning a fixed paper size 
+     * to a pdf page
+     */
     private int heightThreshold;
+    
+    /** 
+     * Width threshold. Used when assigning a fixed paper size
+     * to a pdf page
+     */
     private int widthThreshold;
     
+    /**
+     * Margin used in page cropping
+     */
     private static int CROP_MARGIN = 0;
     
+    /**
+     * List of all the files in the given source folder
+     */
     private List<FileEntry> fileEntries;
     
+    /**
+     * Constructor assigns given parameters to class
+     * variables.
+     * 
+     * Disables ghost4j library's logging.
+     * 
+     * @param sizeLibrary
+     * @param ignoreColor
+     * @param heightThreshold
+     * @param widthThreshold 
+     */
     public ReportBuilder(PaperSizeLibrary sizeLibrary
             , boolean ignoreColor
             , int heightThreshold
@@ -69,6 +111,13 @@ public class ReportBuilder {
         this.pageCropper = new PdfPageCropper();
     }
     
+    /**
+     * Loads the folder in the given path.
+     * If folder contains sub folders it also loads them.
+     * 
+     * @param path
+     * @throws IOException 
+     */
     public void load(String path) throws IOException {
         File folder = new File(path);
         
@@ -86,6 +135,13 @@ public class ReportBuilder {
         
     }
     
+    /**
+     * Finds all sub folders inside given folder.
+     * This method uses recursion to follow down the folder path.
+     * 
+     * @param folder
+     * @return List of found sub folders
+     */
     private List<File> findAllSubFolders(File folder) {
         
         List<File> subfolders = new ArrayList<>();
@@ -100,6 +156,19 @@ public class ReportBuilder {
         return subfolders;
     }
     
+    /**
+     * Loads all the files from given folder.
+     * Iterates through all the files and separates the pdf files
+     * from other files.
+     * 
+     * Creates a new FileEntry instance for every file. If file is a 
+     * pdf file it creates PdfFileEntry instance.
+     * 
+     * When it founds pdf file it processes all the pages of the file.
+     * 
+     * @param folder
+     * @throws IOException 
+     */
     private void loadFolder(File folder) throws IOException {
         
         File[] listOfFiles = folder.listFiles();
@@ -131,6 +200,15 @@ public class ReportBuilder {
         
     }
     
+    /**
+     * Renders all pages of the pdf file to images for processing.
+     * Used 72 dpi for image resolution.
+     * 
+     * @param pdfFile
+     * @return Array of Image class
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     private Image[] pdfDocumentToImages(File pdfFile) throws FileNotFoundException, IOException {
         PDFDocument document = new PDFDocument();
         document.load(pdfFile);
@@ -147,6 +225,16 @@ public class ReportBuilder {
         return images.toArray(arrImages);
     }
     
+    /** 
+     * Iterates trough all the pdf pages and processes every page.
+     * Creates PdfPageEntry of every processed pdf page that contains 
+     * all the information of the page.
+     * 
+     * @param originalFile File class for handling the pdf file
+     * @param fileEntry PdfFileEntry that contains necessary pdf file
+     * information
+     * @throws IOException 
+     */
     private void processAllPdfPages(File originalFile, PdfFileEntry fileEntry) throws IOException {
         
         PDDocument document = Loader.loadPDF(originalFile);
@@ -169,6 +257,21 @@ public class ReportBuilder {
         document.close();
     }
     
+    /**
+     * Processes a single pdf page.
+     * Saves page's measurements to PdfPageEntry instance and the crops the page
+     * and after that it saves cropped measurements to the same instance.
+     * 
+     * If color check (ignoreColor) is enabled then it check the page's color
+     * state and saves it to the PdfPageEntry instance otherwise it sets color
+     * state to a default GRAYSCALE.
+     * 
+     * @param parent File where the pdf pages belongs to
+     * @param pageImg Image of pdf page
+     * @param pageNumber Number of the pdf page
+     * @return Processed page instance (PdfPageEntry)
+     * @throws IOException 
+     */
     private PdfPageEntry processPdfPage(PdfFileEntry parent, BufferedImage pageImg, int pageNumber) throws IOException {
         PdfPageEntry pageEntry = new PdfPageEntry(parent, pageNumber);
         
@@ -196,12 +299,28 @@ public class ReportBuilder {
         return pageEntry;
     }
     
+    /**
+     * Returns an array of all the annotations that the pdf page contains.
+     * If there weren't any annotation then it will return an empty array.
+     * The array contains only the types of the annotations
+     * 
+     * @param page Pdf page that will be checked
+     * @return String array of annotation types
+     * @throws IOException 
+     */
     private String[] getArrayOfAnnotations(PDPage page) throws IOException {
         List<PDAnnotation> anList = page.getAnnotations();
         return anList.stream().map(v -> v.getSubtype())
                 .toArray(String[]::new);
     }
     
+    /**
+     * Converts given image to an pixel array and then
+     * it iterates trough the array to check for colored pixels
+     * 
+     * @param img Image to be processed
+     * @return enum that tells image's color state (GRAYSCALE OR COLORED)
+     */
     private PageColor getPageColor(BufferedImage img) {
        
         int[] pxArray = imageToIntArray(img);
@@ -211,6 +330,15 @@ public class ReportBuilder {
         return isGrayscale ? PageColor.GRAYSCALE : PageColor.COLORED;
     }
     
+    /** 
+     * Iterates trough every fifth of the pixel array to check colored pixels.
+     * If colored pixel is found then it breaks the loop and
+     * returns true. Otherwise it will go through the entire loop
+     * and return false.
+     * 
+     * @param pxArray An array of pixels
+     * @return Boolean which tells if colored pixel is found or not
+     */
     private boolean processPxArray(int[] pxArray) {
         
         boolean isGrayscale = true;
@@ -224,6 +352,13 @@ public class ReportBuilder {
         return isGrayscale;
     }
     
+    /**
+     * Creates int array from BufferedImage and shuffles the pixels
+     * to break concentrated pixel chuncks to speed up the search.
+     * 
+     * @param img Image to be converted
+     * @return Shuffled int array
+     */
     private int[] imageToIntArray(BufferedImage img) {
         int width = img.getWidth();
         int height = img.getHeight();
@@ -236,6 +371,19 @@ public class ReportBuilder {
         return pxArray;
     }
     
+    /**
+     * Tries to find the best possible paper category for the given pdf page
+     * using the page's measurements. 
+     * If paper category does not exist it will create a custom paper category
+     * for the page.
+     * 
+     * After finding suitable paper category it will save the category to given
+     * PdfPageEntry
+     * 
+     * @param pdfEntry Entry of current pdf page
+     * @param imgHeight Height of the page image
+     * @param imgWidth Width of the page image
+     */
     private void addPaperCategories(PdfPageEntry pdfEntry, int imgHeight, int imgWidth) {
        
         int heightOffset = PaperSizeLibrary.mmToPixel(heightThreshold);
@@ -270,6 +418,15 @@ public class ReportBuilder {
         
     }
     
+    /**
+     * Creates a report to a text file to given path using only 
+     * minimal amount information: 
+     * - Size
+     * - GRAYSCALE and/or COLORED depending on if color check is enabled
+     * - Comments
+     * 
+     * @param path Path to the destination folder
+     */
     private void writeSimpleReport(String path) {
         
         List<PdfPageEntry> allPages = Utilities.mergeAllPdfPages(fileEntries);
@@ -309,6 +466,19 @@ public class ReportBuilder {
        
     }
     
+    /**
+     * Creates an extended report to a text file.
+     * Information:
+     * - File name
+     * - Page count
+     * - All the page sizes the file contains
+     * - Color state information
+     * - Custom sizes the pdf file contains
+     * - Pages that failed during the process
+     * - Does page contain annotations
+     * 
+     * @param path Path to the destination folder
+     */
     private void writeExtentedReport(String path) {
         
         List<PdfFileEntry> pdfFiles = fileEntries.stream()
@@ -342,6 +512,12 @@ public class ReportBuilder {
         
     }
     
+    /**
+     * Converts all pdf pages to list of a string arrays and then creates
+     * detailed report to csv file with the created list.
+     * 
+     * @param path Path to destination folder
+     */
     public void writeDetailedReport(String path) {
         
         List<PdfPageEntry> allPages = Utilities.mergeAllPdfPages(fileEntries);
@@ -374,6 +550,16 @@ public class ReportBuilder {
         writeCsvReport(path, headerRow, allRows, pdfCount, pdfPageCount);
     }
     
+    /**
+     * Writes report to a csv file using given list of string arrays.
+     * Adds BOM to the csv file so it can be opened with MS excel.
+     * 
+     * @param path Path to destination folder
+     * @param headerRow String array that contains all the required headers
+     * @param allRows List that contains all pdf page entries as string arrays
+     * @param pdfCount Count of all pdf files.
+     * @param pageCount Count of all the pdf pages of all the pdf files combined
+     */
     private void writeCsvReport(String path, String[] headerRow, List<String[]> allRows, int pdfCount, int pageCount) {
         
         String headerCsv = String.join(";", Arrays.asList(headerRow));
@@ -406,6 +592,18 @@ public class ReportBuilder {
         }
     }
     
+    /**
+     * Writes a report to a text file using given list of string arrays.
+     * 
+     * 
+     * @param path Path to destination folder
+     * @param headerRow String array that contains all required headers
+     * @param allRows List that contains all pdf file entries as string arrays
+     * @param otherFiles Other files that was found from the given folder
+     * @param errorFiles List of all the pdf files that failed the process
+     * @param fileCount Count of all the pdf files
+     * @param pageCount Count of all the pdf pages of all the pdf files combined
+     */
     private void writeTxtReport(String path, String[] headerRow, List<String[]> allRows, List<FileEntry> otherFiles, List<PdfFileEntry> errorFiles, int fileCount, int pageCount) {
         
         List<String[]> table = Utilities.createTable(headerRow, allRows);
@@ -454,6 +652,15 @@ public class ReportBuilder {
         
     }
     
+    /**
+     * Creates three different reports from the files.
+     * Simple report: Contains minimal amount of information
+     * Extented report: Little more specific than simple report
+     * Detailed report: Csv file that contains all the collected information
+     * 
+     * @param path Path to destination file
+     * @param reportName Name of the report
+     */
     public void build(String path, String reportName) {
         writeSimpleReport(path + reportName);
         writeExtentedReport(path + reportName + "_extented");
