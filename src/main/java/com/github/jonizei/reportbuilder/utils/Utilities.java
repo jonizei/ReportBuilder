@@ -17,22 +17,49 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
+ * This class contains utility methods used in this program
+ * 
  * @author Joni
+ * @version 2021-12-03
  */
 public class Utilities {
     
+    /**
+     * Class that contains all the paper sizes used in this program
+     */
     private static PaperSizeLibrary sizeLibrary;
+    
+    /**
+     * Threshold value used in color checking
+     */
     private static int COLOR_THRESHOLD = 0;
     
+    /**
+     * Static method to set PaperSizeLibrary instance
+     * 
+     * @param library PaperSizeLibrary instance
+     */
     public static void setPaperSizeLibrary(PaperSizeLibrary library) {
         sizeLibrary = library;
     }
     
+    /**
+     * Static method to set the color threshold
+     * 
+     * @param threshold Color threshold
+     */
     public static void setColorThreshold(int threshold) {
         COLOR_THRESHOLD = threshold;
     }
     
+    /**
+     * Static method that removes all paper size duplicates from the given 
+     * pdf page list
+     * 
+     * @param pageList List of pdf pages
+     * @param ignoreUnknown Should unknown paper sizes to be ignored
+     * @return List of pdf pages with no paper size duplicates
+     */
     public static List<String> getDistinctPaperSizes(List<PdfPageEntry> pageList, boolean ignoreUnknown) {
         
         if(ignoreUnknown) {
@@ -51,6 +78,14 @@ public class Utilities {
         
     }
     
+    /**
+     * Static method that counts all pdf pages with the same paper size
+     * 
+     * @param pageList List of pdf pages
+     * @param sizeName Name of the paper size
+     * @param color Only pages with this color state will be counted
+     * @return Count of the pdf pages with same size
+     */
     public static int countPagesByPaperSize(List<PdfPageEntry> pageList, String sizeName, ReportBuilder.PageColor color) {
         if(color == ReportBuilder.PageColor.ALL) {
            return pageList.stream()
@@ -64,6 +99,13 @@ public class Utilities {
         }
     }
     
+    /**
+     * Static method that merges all the pdf pages from every pdf file to 
+     * a single list
+     * 
+     * @param fileEntries List of files
+     * @return Merged list of all pdf pages of every pdf file
+     */
     public static List<PdfPageEntry> mergeAllPdfPages(List<FileEntry> fileEntries) {
         
         List<PdfPageEntry> allPages = new ArrayList<>();
@@ -77,6 +119,12 @@ public class Utilities {
         return allPages;
     }
     
+    /** 
+     * Static method that checks if color is grayscale or not
+     * 
+     * @param color Color of the pixel
+     * @return Boolean value which tells if color is grayscale or not
+     */
     public static boolean isGrayscale(Color color) {
         int rgDiff = Math.abs(color.getRed() - color.getGreen());
         int gbDiff = Math.abs(color.getGreen() - color.getBlue());
@@ -87,6 +135,13 @@ public class Utilities {
         return isGrayscale;
     }
     
+    /**
+     * Statc method that tries to find height category where given height will fit
+     * 
+     * @param height Height of the pdf page
+     * @param heightOffset Offset to modify the strictness of the search
+     * @return Found paper category if finds any
+     */
     public static PaperCategory findStrictHeightCategory(int height, int heightOffset) {
         
         PaperCategory foundCategory = null;
@@ -100,6 +155,14 @@ public class Utilities {
         return foundCategory;
     }
     
+    /**
+     * Static method that finds the first paper category where given size fits
+     * 
+     * @param categories Categories that will be searched
+     * @param size width or height of the paper
+     * @param offset Offset to modify the strictness of the search
+     * @return Found paper category if finds any
+     */
     public static PaperCategory findPaperCategory(List<PaperCategory> categories, int size, int offset) {
         
         PaperCategory foundCategory = null;
@@ -114,6 +177,15 @@ public class Utilities {
         return foundCategory;
     }
     
+    /**
+     * Static method finds the closest category for the paper size
+     * 
+     * @param width Width of the paper
+     * @param height Height of the paper
+     * @param widthOffset Width offset to modify the strictness of the search
+     * @param heightOffset height offset to modify the strictness of the search
+     * @return Closest height category
+     */
     public static PaperCategory findClosestCategory(int width, int height, int widthOffset, int heightOffset) {
         PaperCategory closestCategory = null;
         PaperCategory foundCategory = Utilities.findPaperCategory(sizeLibrary.getPaperHeightCategories(), height, heightOffset);
@@ -137,12 +209,26 @@ public class Utilities {
         return closestCategory;
     }
     
+    /**
+     * Static method that finds the longest string from a string array
+     * 
+     * @param array Array of strings
+     * @return Width of the longest string
+     */
     public static int getLongestString(String[] array) {
         return Arrays.asList(array).stream()
                         .mapToInt(e -> e.length())
                         .max().getAsInt();
     }
     
+    /**
+     * Static method that creates a table (list of string arrays)
+     * from string array containing headers and list string arrays
+     * 
+     * @param headerRow Header names of the table
+     * @param rows Table rows
+     * @return Table (List of string arrays)
+     */
     public static List<String[]> createTable(String[] headerRow, List<String[]> rows) {
         
         rows.add(0, headerRow);
@@ -161,6 +247,14 @@ public class Utilities {
         return table;
     }
     
+    /**
+     * Static method that creates all the strings in the array to the same
+     * length with padding
+     * 
+     * @param array Array of strings
+     * @param padding Number of empty spaces
+     * @return Array of strings with same lengths
+     */
     public static String[] valuesToConstLength(String[] array, int padding) {
         
         int maxLength = getLongestString(array);
@@ -172,6 +266,14 @@ public class Utilities {
         return array;
     }
     
+    /**
+     * Static method that creates a table (list of string arrays) from
+     * pdf pages and create distinct rows using paper sizes
+     * 
+     * @param allPages Pdf pages to be added to the table
+     * @param ignoreColor Should page color be ignored or not
+     * @return Table with distinct paper size rows (list of string arrays)
+     */
     public static List<String[]> createRowsByPaperSize(List<PdfPageEntry> allPages, boolean ignoreColor) {
         List<String> allPaperSizes = getDistinctPaperSizes(allPages, false);
         List<String[]> rows = new ArrayList<>();
@@ -197,6 +299,12 @@ public class Utilities {
         return rows;
     }
     
+    /**
+     * Static method that returns highest value from given integer array
+     * 
+     * @param array Array of integers
+     * @return Highest value from given integer array
+     */
     public static int arrayMax(int[] array) {
         
         if(array.length > 0) {
@@ -211,6 +319,12 @@ public class Utilities {
         return 0;
     }
     
+    /**
+     * Static method that returns lowest integer value from given integer array
+     * 
+     * @param array Array of integers
+     * @return Lowest value from given integer array
+     */
     public static int arrayMin(int[] array) {
         
         if(array.length > 0) {
@@ -225,6 +339,12 @@ public class Utilities {
         return 0;
     }
     
+    /**
+     * Static method that returns distinct values from array of strings
+     * 
+     * @param array Array of strings
+     * @return Array of strings with distinct values
+     */
     public static String[] distinctArray(String[] array) {
         return Arrays.asList(array).stream()
                 .distinct()

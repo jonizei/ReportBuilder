@@ -17,23 +17,65 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- *
+ * This class reads the settings.xml file that contains all necessary
+ * information for this program
+ * 
  * @author Joni
+ * @version 2021-12-03
  */
 public class SettingsReader {
     
+    /**
+     * Multiplier for converting millimetres to pixels
+     * with 72 dpi resolution
+     */
     private static int PX_FACTOR = 3;
     
+    /**
+     * Path to a source folder
+     */
     private String sourcePath;
+    
+    /**
+     * Path to a destination folder
+     */
     private String destinationPath;
+    
+    /**
+     * Name of the report
+     */
     private String reportName;
+    
+    /**
+     * Boolean that enables or disables color state checking
+     */
     private boolean ignoreColor;
+    
+    /**
+     * Height threshold. Used when assigning a fixed paper size 
+     * to a pdf page
+     */
     private int heightThreshold;
+    
+    /**
+     * Width threshold. Used when assigning a fixed paper size 
+     * to a pdf page
+     */
     private int widthThreshold;
+    
+    /**
+     * Color threshold. Used when checking if pixel is colored or grayscale
+     */
     private int colorThreshold;
     
+    /**
+     * Class that contains all the paper sizes used in this program
+     */
     private PaperSizeLibrary sizeLibrary;
     
+    /**
+     * Constructor of SettingsReader
+     */
     public SettingsReader() {
         this.sourcePath = "";
         this.destinationPath = "";
@@ -44,6 +86,12 @@ public class SettingsReader {
         this.colorThreshold = 0;
     }
     
+    /** 
+     * Reads given xml file and assigns necessary values to variables
+     * 
+     * @param path Path to the xml file
+     * @return Boolean which tells if xml file was read successfully
+     */
     public boolean readXml(String path) {
         
         File xmlFile = new File(path);
@@ -77,6 +125,13 @@ public class SettingsReader {
         return false;
     }
     
+    /**
+     * Returns string from given xml tag
+     * 
+     * @param doc Xml document
+     * @param tag Name of the xml tag
+     * @return String inside xml tag
+     */
     private String getTagStrContent(Document doc, String tag) {
         String temp = "";
         
@@ -90,6 +145,13 @@ public class SettingsReader {
         return temp;
     }
     
+    /**
+     * Returns int from given xml tag
+     * 
+     * @param doc Xml document
+     * @param tag Name of the xml tag
+     * @return Integer inside xml tag
+     */
     private int getTagIntContent(Document doc, String tag) {
         String tempStr = getTagStrContent(doc, tag);
         int tempInt = 0;
@@ -106,6 +168,13 @@ public class SettingsReader {
         return tempInt;
     }
     
+    /**
+     * Reads all paper categories from the xml file and saves them 
+     * to the PaperSizeLibrary class.
+     * 
+     * @param doc Xml document
+     * @return PaperSizeLibrary instance with all the paper categories
+     */
     private PaperSizeLibrary createPaperSizeLibrary(Document doc) {
         
         PaperSizeLibrary tempLibrary = PaperSizeLibrary.getInstance();
@@ -142,6 +211,13 @@ public class SettingsReader {
         return tempLibrary;
     }
         
+    /**
+     * Iterates through all the paper categories inside the xml file
+     * and saves them to a PaperCategory array.
+     * 
+     * @param categoryNode paper category parent node
+     * @return Array of PaperCategory objects
+     */
     private PaperCategory[] readPaperCategoryList(Node categoryNode) {
      
         if(categoryNode.hasChildNodes()) {
@@ -167,11 +243,17 @@ public class SettingsReader {
         
     }
     
-    private PaperCategory readPaperCategory(Node gategory) {
+    /**
+     * Gets paper category information from paper category node
+     * 
+     * @param category Paper category node
+     * @return PaperCategory object
+     */
+    private PaperCategory readPaperCategory(Node category) {
         
-        if(gategory.hasChildNodes()) {
+        if(category.hasChildNodes()) {
             PaperCategory tempGategory = new PaperCategory();
-            NodeList gategoryValues = gategory.getChildNodes();
+            NodeList gategoryValues = category.getChildNodes();
             for(int i = 0; i < gategoryValues.getLength(); i++) {
                 Node value = gategoryValues.item(i);
                 if(value.getNodeName().equals("name")) {
@@ -193,6 +275,12 @@ public class SettingsReader {
         return null;
     }
     
+    /**
+     * Gets all paper width categories from the xml
+     * 
+     * @param paperWidthsNode paper widths parent node
+     * @return Array of PaperCategory objects
+     */
     private PaperCategory[] readPaperWidths(Node paperWidthsNode) {
      
         if(paperWidthsNode.hasChildNodes()) {
@@ -218,6 +306,12 @@ public class SettingsReader {
         return null;
     }
     
+    /**
+     * Gets array of paper size names from the xml
+     * 
+     * @param namedPaperNodes named papers parent node
+     * @return Array of NamedPaper objects
+     */
     private PaperSizeLibrary.NamedPaper[] readNamedPaperList(Node namedPaperNodes) {
         
         if(namedPaperNodes.hasChildNodes()) {
@@ -237,6 +331,12 @@ public class SettingsReader {
         return null;
     }
     
+    /**
+     * Gets paper name information from named paper node
+     * 
+     * @param paper named paper node
+     * @return NamedPaper object
+     */
     private PaperSizeLibrary.NamedPaper readNamedPaper(Node paper) {
         
         if(paper.hasChildNodes()) {
@@ -269,34 +369,75 @@ public class SettingsReader {
         return null;
     }
     
+    /**
+     * Returns path to the source folder
+     * 
+     * @return Path to the source folder
+     */
     public String getSourcePath() {
         return this.sourcePath;
     }
     
+    /**
+     * Returns path to the destination folder
+     * 
+     * @return Path to the destination folder
+     */
     public String getDestinationPath() {
         return this.destinationPath;
     }
     
+    /**
+     * Returns the name of the report
+     * 
+     * @return Name of the report
+     */
     public String getReportName() {
         return this.reportName;
     }
     
+    /**
+     * Returns paper size library
+     * 
+     * @return PaperSizeLibrary object
+     */
     public PaperSizeLibrary getPaperSizeLibrary() {
         return this.sizeLibrary;
     }
     
+    /**
+     * Returns ignoreColor boolean which tells if color checking
+     * is enabled or disabled
+     * 
+     * @return Boolean for color checking
+     */
     public boolean ignoreColor() {
         return this.ignoreColor;
     }
     
+    /**
+     * Returns height threshold value
+     * 
+     * @return Height threshold
+     */
     public int getHeightThreshold() {
         return this.heightThreshold;
     }
     
+    /**
+     * Returns width threshold value
+     * 
+     * @return Width threshold
+     */
     public int getWidthThreshold() {
         return this.widthThreshold;
     }
     
+    /**
+     * Returns color threshold value
+     * 
+     * @return Color threshold
+     */
     public int getColorThreshold() {
         return this.colorThreshold;
     }

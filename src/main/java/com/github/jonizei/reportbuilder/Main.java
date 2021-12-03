@@ -21,7 +21,10 @@ import java.util.Scanner;
 public class Main {
     
     /**
-     * 
+     * Checks if given folders exists and if SettingsReader read successfully
+     * the xml file. If all checks are good then it initializes the ReportBuilder
+     * and starts processing the files. It also takes time how long the whole
+     * process will take.
      * 
      * @param args 
      */
@@ -76,6 +79,12 @@ public class Main {
         scan.nextLine();
     }
     
+    /**
+     * Checks if given path is valid and it is a directory
+     * 
+     * @param path Path to be validated
+     * @return Boolean which tells if the path is valid or not
+     */
     private static boolean isPathValid(String path) {
         
         File directory = new File(path);

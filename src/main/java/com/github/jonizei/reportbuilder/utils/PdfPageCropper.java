@@ -11,17 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * This class contains methods to crop images
+ * 
  * @author Joni
+ * @version 2021-12-03
  */
 public class PdfPageCropper {
     
+    /**
+     * Integer values to represent left or right side of an image
+     */
     private static final int LEFT = 0, RIGHT = 1;
  
+    /**
+     * Constructor of PdfPageCropper
+     */
     public PdfPageCropper() {
         
     }
     
+    /**
+     * Crops image as minimum size as possible following the given
+     * margin value.
+     * 
+     * @param pageImg Image to be cropped
+     * @param marginMm Crop margin
+     * @return Cropped image
+     */
     public BufferedImage cropPage(BufferedImage pageImg, int marginMm) {
         
         int marginPx = PaperSizeLibrary.mmToPixel(marginMm);
@@ -52,6 +68,16 @@ public class PdfPageCropper {
         return pageImg.getSubimage(leftCropPoint, topCropPoint, imgWidth, imgHeight);
     }
     
+    /**
+     * Extracts left or right column from the 2d array based on
+     * the boolean "fromRight" and returns single integer array
+     * 
+     * @param rowCropPoints 2D array holding crop points from left and right side
+     * @param startHeight Height where the iteration starts
+     * @param fromRight Boolean which tell which column will be extracted from
+     * the 2d array
+     * @return Column from the 2d array
+     */
     private int[] getCropPoints(int[][] rowCropPoints, int startHeight, boolean fromRight) {
         
         List<Integer> cropPoints = new ArrayList<>();
@@ -66,6 +92,14 @@ public class PdfPageCropper {
         return cropPoints.stream().mapToInt(i->i).toArray();
     }
     
+    /**
+     * Finds the first non-white pixel vertically
+     * 
+     * @param rowCropPoints 2D array holding crop points from left and right side
+     * @param startEnd Boolean which tells if it starts iteration from the
+     * top or from the bottom
+     * @return Index of the first non-white pixel vertically
+     */
     private int findVerticalCropPoint(int[][] rowCropPoints, boolean startEnd) {
         
         int cropPoint = 0;
@@ -91,6 +125,14 @@ public class PdfPageCropper {
         return cropPoint;
     }
     
+    /**
+     * Finds the first non-white pixel horizontally
+     * 
+     * @param pixelArray Single pixel row
+     * @param startEnd Boolean which tells if iteration start from left
+     * or from right
+     * @return Index of first non-white pixel horizontally
+     */
     private int findHorizontalCropPoint(int[] pixelArray, boolean startEnd) {
         
         boolean isWhite = true;
@@ -118,6 +160,12 @@ public class PdfPageCropper {
         return cropPoint;
     }
     
+    /**
+     * Checks if pixel is white
+     * 
+     * @param color Color of the pixel
+     * @return Boolean which tells if color is white or not
+     */
     private static boolean isPixelWhite(Color color) {
         return (color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255);
     }
