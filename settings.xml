@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <settings>
     <!-- Polku kansioon, josta raportti luodaan -->
-    <source></source>
+    <source>D:\Programming\pdfTestFolder\AllTests\Esim3</source>
     <!-- Polku kansioon, johon raportti luodaan -->
-    <destination></destination>
+    <destination>D:\Programming\pdfTestFolder\reports\Newest reports\</destination>
     <!-- Raportti tiedoston nimi -->
-    <reportname></reportname>
+    <reportname>Esim3New</reportname>
     <!-- Tarkistetaanko sivun väri true/false -->
     <ignore-color>false</ignore-color>
     <!-- Korkeuden toleranssi millimetreinä -->
