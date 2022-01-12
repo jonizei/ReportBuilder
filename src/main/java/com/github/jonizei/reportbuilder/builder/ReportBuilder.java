@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.Loader;
@@ -89,6 +90,11 @@ public class ReportBuilder {
     private List<FileEntry> fileEntries;
     
     /**
+     * List of all errors happened during runtime
+     */
+    private HashMap<String, String> errorLogs;
+    
+    /**
      * Constructor assigns given parameters to class
      * variables.
      * 
@@ -109,6 +115,7 @@ public class ReportBuilder {
         this.widthThreshold = widthThreshold;
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         this.pageCropper = new PdfPageCropper();
+        this.errorLogs = new HashMap<>();
     }
     
     /**
@@ -185,9 +192,14 @@ public class ReportBuilder {
                 fileEntry = new FileEntry(folder.getPath(), file.getName());
 
                 if(fileEntry.getExtension().equals("pdf")) {
-                    pdfFileEntry = new PdfFileEntry(fileEntry.getPath(), fileEntry.getName(), fileEntry.getExtension());
-                    processAllPdfPages(file, pdfFileEntry);
-                    fileEntries.add(pdfFileEntry);
+                    try {
+                        pdfFileEntry = new PdfFileEntry(fileEntry.getPath(), fileEntry.getName(), fileEntry.getExtension());
+                        processAllPdfPages(file, pdfFileEntry);
+                        fileEntries.add(pdfFileEntry);
+                    } catch(Exception ex) {
+                        System.out.println(String.format("Ongelma tiedoston käsittelyssä: %s", file.getName()));
+                        this.errorLogs.put(file.getName(), Utilities.convertStackTraceToString(ex));
+                    }
                 }
                 else {
                     fileEntries.add(fileEntry);
@@ -235,23 +247,22 @@ public class ReportBuilder {
      * information
      * @throws IOException 
      */
-    private void processAllPdfPages(File originalFile, PdfFileEntry fileEntry) throws IOException {
+    private void processAllPdfPages(File originalFile, PdfFileEntry fileEntry) throws Exception {
         
         PDDocument document = Loader.loadPDF(originalFile);
         Image[] allPages = pdfDocumentToImages(originalFile);
         
         for(int i = 0; i < allPages.length; i++) {
             BufferedImage pageImg = (BufferedImage) allPages[i];
-            
+
             PdfPageEntry newPage = processPdfPage(fileEntry, pageImg, i+1);
             newPage.setAnnotations(getArrayOfAnnotations(document.getPage(i)));
-            
+
             fileEntry.addPage(newPage);
-            
+
             pageImg.flush();
             pageImg = null;
             System.out.println(String.format("Sivuja käsitelty: %d/%d", i+1, allPages.length));
-            
         }
         
         document.close();
@@ -653,6 +664,41 @@ public class ReportBuilder {
     }
     
     /**
+     * Creates a text file for all the errors that
+     * happened during runtime.
+     * 
+     * Writes names of the files that failed.
+     * Writes all the exception messages.
+     * 
+     * @param path Full path to the error log file
+     */
+    private void writeErrorLogs(String path)
+    {
+        try {
+            BufferedWriter reportWriter = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(new File(path + ".txt"), false), StandardCharsets.UTF_8));
+            
+            reportWriter.write("Epäonnistuneet tiedostot:\n");
+            
+            for(String key : this.errorLogs.keySet()) {
+                reportWriter.write(String.format("%s\n", key));
+            }
+            
+            reportWriter.write("\n");
+            
+            for(String key : this.errorLogs.keySet()) {
+                reportWriter.write(String.format("%s:\n", key));
+                reportWriter.write(String.format("%s\n\n", this.errorLogs.get(key)));
+            }
+            
+            reportWriter.flush();
+            reportWriter.close();
+        } catch(IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    /**
      * Creates three different reports from the files.
      * Simple report: Contains minimal amount of information
      * Extented report: Little more specific than simple report
@@ -665,9 +711,15 @@ public class ReportBuilder {
         writeSimpleReport(path + reportName);
         writeExtentedReport(path + reportName + "_extented");
         writeDetailedReport(path + reportName + "_pageDetails");
+        
         System.out.println("Raportti luotu onnistuneesti!");
         System.out.println(path + reportName + ".txt");
         System.out.println(path + reportName + "_extented.txt");
         System.out.println(path + reportName + "_pageDetails.csv");
+        
+        if(this.errorLogs.size() > 0) {
+            writeErrorLogs(path + reportName + "_errorLogs");
+            System.out.println(path + reportName + "_errorLogs.txt");
+        }
     }
 }

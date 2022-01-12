@@ -10,6 +10,8 @@ import com.github.jonizei.reportbuilder.builder.PdfFileEntry;
 import com.github.jonizei.reportbuilder.builder.PdfPageEntry;
 import com.github.jonizei.reportbuilder.builder.ReportBuilder;
 import java.awt.Color;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -349,6 +351,18 @@ public class Utilities {
         return Arrays.asList(array).stream()
                 .distinct()
                 .toArray(String[]::new);
+    }
+    
+    /**
+     * Converts exception's stacktrace to string.
+     * 
+     * @param ex Exception
+     * @return Exception stacktrace as a string
+     */
+    public static String convertStackTraceToString(Exception ex) {
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
     }
     
 }
