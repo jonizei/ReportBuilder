@@ -718,6 +718,8 @@ public class ReportBuilder {
         System.out.println(path + reportName + "_pageDetails.csv");
         
         if(this.errorLogs.size() > 0) {
+            System.out.println("Joitain tiedostoja ei voitu käsitellä.");
+            System.out.println("Tiedot tallennettu:");
             writeErrorLogs(path + reportName + "_errorLogs");
             System.out.println(path + reportName + "_errorLogs.txt");
         }
