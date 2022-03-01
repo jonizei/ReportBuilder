@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -33,14 +34,27 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 
 import org.ghost4j.document.PDFDocument;
 import org.ghost4j.renderer.SimpleRenderer;
+import org.ghost4j.converter.PDFConverter;
+import org.ghost4j.converter.PSConverter;
+import org.ghost4j.document.PSDocument;
 
 /**
  * This class processes all the files in the given source folder
  * 
  * @author Joni
- * @version 2021-12-03
+ * @version 2022-01-03
  */
 public class ReportBuilder {
+    
+    /**
+     * Name of the temporary ps file
+     */
+    private final static String TEMP_PS = "tempPs.ps";
+    
+    /**
+     * Name of the temporary pdf file
+     */
+    private final static String TEMP_PDF = "tempPdf.pdf";
     
     /**
      * Class that contains all the paper sizes used in this program
@@ -140,6 +154,7 @@ public class ReportBuilder {
         }
         else System.out.println("Kansiota ei löydy");
         
+        removeTempFiles();
     }
     
     /**
@@ -192,6 +207,7 @@ public class ReportBuilder {
                 fileEntry = new FileEntry(folder.getPath(), file.getName());
 
                 if(fileEntry.getExtension().equals("pdf")) {
+                    
                     try {
                         pdfFileEntry = new PdfFileEntry(fileEntry.getPath(), fileEntry.getName(), fileEntry.getExtension());
                         processAllPdfPages(file, pdfFileEntry);
@@ -200,6 +216,7 @@ public class ReportBuilder {
                         System.out.println(String.format("Ongelma tiedoston käsittelyssä: %s", file.getName()));
                         this.errorLogs.put(file.getName(), Utilities.convertStackTraceToString(ex));
                     }
+                    
                 }
                 else {
                     fileEntries.add(fileEntry);
@@ -223,10 +240,16 @@ public class ReportBuilder {
      */
     private Image[] pdfDocumentToImages(File pdfFile) throws FileNotFoundException, IOException {
         PDFDocument document = new PDFDocument();
-        document.load(pdfFile);
+        //document.load(pdfFile);
+        
         SimpleRenderer renderer = new SimpleRenderer();
         renderer.setResolution(72);
+        
+        File tempPdf = convertPDF(pdfFile);
+        document.load(tempPdf);
+        
         List<Image> images = new ArrayList<>();
+        
         try {
             images = renderer.render(document);
         } catch(Exception ex) {
@@ -235,6 +258,98 @@ public class ReportBuilder {
         
         Image[] arrImages = new Image[images.size()];
         return images.toArray(arrImages);
+    }
+    
+    /**
+     * Convert PDF to PS file and back to PDF
+     * This ensures that the PDF file is in right format
+     * for the ghost4j image conversion
+     * 
+     * @param pdfFile PDF file to be converted
+     * @return Converted PDF file
+     */
+    private File convertPDF(File pdfFile) {
+        File tempFile = null;
+        tempFile = convertPDFtoPS(pdfFile);
+        tempFile = convertPStoPDF(tempFile);
+        return tempFile;
+    }
+    
+    private void removeTempFiles() {
+        File tmpPs = new File(TEMP_PS);
+        File tmpPdf = new File(TEMP_PDF);
+        
+        if(tmpPs.exists()) tmpPs.delete();
+        if(tmpPdf.exists()) tmpPdf.delete();
+    }
+    
+    /**
+     * Converts PDF file to PS file
+     * 
+     * @param pdfFile PDF file to be converted
+     * @return New PS file
+     */
+    private File convertPDFtoPS(File pdfFile) {
+        FileOutputStream fos = null;
+        File tempPs = new File(TEMP_PS);
+        
+        try {
+            PDFDocument document = new PDFDocument();
+            document.load(pdfFile);
+            
+            fos = new FileOutputStream(tempPs);
+            
+            PSConverter converter = new PSConverter();
+            converter.convert(document, fos);
+            
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            if(fos != null) {
+                try {
+                    fos.close();
+                }catch(IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        
+        return tempPs;
+    }
+    
+    /**
+     * Converts PS file to PDF file
+     * 
+     * @param psFile PS file to be converted
+     * @return New PDF file
+     */
+    private File convertPStoPDF(File psFile) {
+        FileOutputStream fos = null;
+        File tempPdf = new File(TEMP_PDF);
+        
+        try {
+            PSDocument document = new PSDocument();
+            document.load(psFile);
+            
+            fos = new FileOutputStream(tempPdf);
+            
+            PDFConverter converter = new PDFConverter();
+            converter.setPDFSettings(PDFConverter.OPTION_PDFSETTINGS_PREPRESS);
+            converter.convert(document, fos);
+            
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            if(fos != null) {
+                try {
+                    fos.close();
+                }catch(IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        
+        return tempPdf;
     }
     
     /** 
@@ -651,7 +766,7 @@ public class ReportBuilder {
             if(otherFiles.size() > 0) {
                 reportWriter.write("\nMuut tiedostot:\n");
                 for(FileEntry fileEntry : otherFiles) {
-                    reportWriter.write(String.format("%s", fileEntry.getFullname()));
+                    reportWriter.write(String.format("%s\n", fileEntry.getFullname()));
                 }
             }
             
