@@ -5,6 +5,7 @@
  */
 package com.github.jonizei.reportbuilder.builder;
 
+import com.github.jonizei.reportbuilder.utils.DebugUtilities;
 import com.github.jonizei.reportbuilder.utils.PaperCategory;
 import com.github.jonizei.reportbuilder.utils.PaperSizeLibrary;
 import com.github.jonizei.reportbuilder.utils.PdfPageCropper;
@@ -108,6 +109,8 @@ public class ReportBuilder {
      */
     private HashMap<String, String> errorLogs;
     
+    private DebugUtilities debugUtils;
+    
     /**
      * Constructor assigns given parameters to class
      * variables.
@@ -118,11 +121,13 @@ public class ReportBuilder {
      * @param ignoreColor
      * @param heightThreshold
      * @param widthThreshold 
+     * @param enableDebug
      */
     public ReportBuilder(PaperSizeLibrary sizeLibrary
             , boolean ignoreColor
             , int heightThreshold
-            , int widthThreshold) {
+            , int widthThreshold
+            , boolean enableDebug) {
         this.sizeLibrary = sizeLibrary;
         this.ignoreColor = ignoreColor;
         this.heightThreshold = heightThreshold;
@@ -130,6 +135,7 @@ public class ReportBuilder {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         this.pageCropper = new PdfPageCropper();
         this.errorLogs = new HashMap<>();
+        this.debugUtils = new DebugUtilities(enableDebug);
     }
     
     /**
@@ -370,6 +376,8 @@ public class ReportBuilder {
         for(int i = 0; i < allPages.length; i++) {
             BufferedImage pageImg = (BufferedImage) allPages[i];
 
+            debugUtils.calculateColorPixels(fileEntry.getName(), i+1, pageImg);
+            
             PdfPageEntry newPage = processPdfPage(fileEntry, pageImg, i+1);
             newPage.setAnnotations(getArrayOfAnnotations(document.getPage(i)));
 
@@ -838,5 +846,7 @@ public class ReportBuilder {
             writeErrorLogs(path + reportName + "_errorLogs");
             System.out.println(path + reportName + "_errorLogs.txt");
         }
+        
+        debugUtils.writeLogs(path + "debug_log");
     }
 }

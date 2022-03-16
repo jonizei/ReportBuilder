@@ -18,6 +18,9 @@
     luetaan mustavalkoisena -->
     <color-threshold>5</color-threshold>
 
+    <!-- Käytetään testaukseen pidä arvo 'false' -->
+    <enable-debug>false</enable-debug>
+
     <!-- Käytettävät raportti kategoriat -->
     <paper-settings>
         <paper-categories>

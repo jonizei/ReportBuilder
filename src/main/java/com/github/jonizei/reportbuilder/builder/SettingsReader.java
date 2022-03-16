@@ -69,6 +69,11 @@ public class SettingsReader {
     private int colorThreshold;
     
     /**
+     * Boolean which tells if debugging is enabled
+     */
+    private boolean enableDebug;
+    
+    /**
      * Class that contains all the paper sizes used in this program
      */
     private PaperSizeLibrary sizeLibrary;
@@ -84,6 +89,7 @@ public class SettingsReader {
         this.heightThreshold = 0;
         this.widthThreshold = 0;
         this.colorThreshold = 0;
+        this.enableDebug = false;
     }
     
     /** 
@@ -112,6 +118,9 @@ public class SettingsReader {
                 this.heightThreshold = getTagIntContent(doc, "height-threshold");
                 this.widthThreshold = getTagIntContent(doc, "width-threshold");
                 this.colorThreshold = getTagIntContent(doc, "color-threshold");
+                
+                String strIsDebug = getTagStrContent(doc, "enable-debug");
+                this.enableDebug = strIsDebug.toLowerCase().equals("true");
                 
                 sizeLibrary = createPaperSizeLibrary(doc);
                 
@@ -440,6 +449,15 @@ public class SettingsReader {
      */
     public int getColorThreshold() {
         return this.colorThreshold;
+    }
+    
+    /**
+     * Returns enable debug value
+     * 
+     * @return enable debug boolean
+     */
+    public boolean getEnableDebug() {
+        return this.enableDebug;
     }
     
 }

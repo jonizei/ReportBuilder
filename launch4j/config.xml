@@ -45,12 +45,12 @@
     <maxHeapSize>2048</maxHeapSize>
   </jre>
   <versionInfo>
-    <fileVersion>1.3.4.4</fileVersion>
-    <txtFileVersion>1.3.4.4</txtFileVersion>
+    <fileVersion>1.3.4.5</fileVersion>
+    <txtFileVersion>1.3.4.5</txtFileVersion>
     <fileDescription>Report Builder for PDF files</fileDescription>
     <copyright>NIL</copyright>
-    <productVersion>1.3.4.4</productVersion>
-    <txtProductVersion>1.3.4.4</txtProductVersion>
+    <productVersion>1.3.4.5</productVersion>
+    <txtProductVersion>1.3.4.5</txtProductVersion>
     <productName>ReportBuilder</productName>
     <companyName></companyName>
     <internalName>ReportBuilder</internalName>
