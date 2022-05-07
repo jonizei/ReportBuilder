@@ -28,11 +28,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.set.SynchronizedSet;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.ghost4j.document.PDFDocument;
 import org.ghost4j.renderer.SimpleRenderer;
 import org.ghost4j.converter.PDFConverter;
@@ -245,9 +248,13 @@ public class ReportBuilder {
      * @throws IOException 
      */
     private Image[] pdfDocumentToImages(File pdfFile) throws FileNotFoundException, IOException {
+
+        if(!Utilities.ghostCanReadPdf(pdfFile)) {
+            return pdfDocumentToImagesWithPdfBox(pdfFile);
+        }
+
         PDFDocument document = new PDFDocument();
-        //document.load(pdfFile);
-        
+
         SimpleRenderer renderer = new SimpleRenderer();
         renderer.setResolution(72);
         
@@ -264,6 +271,30 @@ public class ReportBuilder {
         
         Image[] arrImages = new Image[images.size()];
         return images.toArray(arrImages);
+    }
+
+    private Image[] pdfDocumentToImagesWithPdfBox(File pdfFile) {
+
+        List<BufferedImage> buffImages = new ArrayList<>();
+
+        try {
+            PDDocument document = Loader.loadPDF(pdfFile);
+            PDFRenderer renderer = new PDFRenderer(document);
+            BufferedImage pageImg = null;
+
+            int numberOfPages = document.getNumberOfPages();
+            for(int i = 0; i < numberOfPages; i++) {
+                pageImg = renderer.renderImageWithDPI(i, 72);
+                buffImages.add(pageImg);
+            }
+        } catch(IOException ex) {
+            ex.printStackTrace();
+        }
+
+        List<Image> images = buffImages.stream()
+                .map(bImg -> (Image)bImg)
+                .collect(Collectors.toList());
+        return images.toArray(new Image[images.size()]);
     }
     
     /**
@@ -302,7 +333,7 @@ public class ReportBuilder {
         try {
             PDFDocument document = new PDFDocument();
             document.load(pdfFile);
-            
+
             fos = new FileOutputStream(tempPs);
             
             PSConverter converter = new PSConverter();
@@ -371,6 +402,7 @@ public class ReportBuilder {
     private void processAllPdfPages(File originalFile, PdfFileEntry fileEntry) throws Exception {
         
         PDDocument document = Loader.loadPDF(originalFile);
+
         Image[] allPages = pdfDocumentToImages(originalFile);
         
         for(int i = 0; i < allPages.length; i++) {

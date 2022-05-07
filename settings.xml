@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <settings>
     <!-- Polku kansioon, josta raportti luodaan -->
-    <source></source>
+    <source>D:\Programming\pdfTestFolder\testfolder12</source>
     <!-- Polku kansioon, johon raportti luodaan -->
-    <destination></destination>
+    <destination>D:\Programming\pdfTestFolder\TestEnv\Results\</destination>
     <!-- Raportti tiedoston nimi -->
-    <reportname></reportname>
+    <reportname>PdfTest_v12</reportname>
     <!-- Tarkistetaanko sivun väri true/false -->
     <ignore-color>false</ignore-color>
     <!-- Korkeuden toleranssi millimetreinä -->
