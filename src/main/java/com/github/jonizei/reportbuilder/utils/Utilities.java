@@ -5,18 +5,25 @@
  */
 package com.github.jonizei.reportbuilder.utils;
 
+import com.github.jonizei.reportbuilder.Main;
 import com.github.jonizei.reportbuilder.builder.FileEntry;
 import com.github.jonizei.reportbuilder.builder.PdfFileEntry;
 import com.github.jonizei.reportbuilder.builder.PdfPageEntry;
 import com.github.jonizei.reportbuilder.builder.ReportBuilder;
 import java.awt.Color;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.ghost4j.document.PDFDocument;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * This class contains utility methods used in this program
@@ -25,6 +32,10 @@ import org.apache.commons.lang3.StringUtils;
  * @version 2021-12-03
  */
 public class Utilities {
+
+    private static final String GIT_USERNAME = "jonizei";
+    private static final String GIT_REPO = "ReportBuilder";
+    private static final String GIT_API_URL = createGitApiUrl();
     
     /**
      * Class that contains all the paper sizes used in this program
@@ -35,6 +46,10 @@ public class Utilities {
      * Threshold value used in color checking
      */
     private static int COLOR_THRESHOLD = 0;
+
+    public static String createGitApiUrl() {
+        return "https://api.github.com/repos/" + GIT_USERNAME + "/" + GIT_REPO + "/tags";
+    }
     
     /**
      * Static method to set PaperSizeLibrary instance
@@ -363,6 +378,63 @@ public class Utilities {
         StringWriter sw = new StringWriter();
         ex.printStackTrace(new PrintWriter(sw));
         return sw.toString();
+    }
+
+    public static void checkProgramVersion() {
+
+        String version = Main.class.getPackage().getImplementationVersion();
+        System.out.println("Version: " + version);
+
+        try {
+            String responseJson = loadTagsFromGithubAsJson();
+            JSONArray responseArray = new JSONArray(responseJson);
+            for(int i = 0; i < responseArray.length(); i++) {
+               JSONObject tmp = responseArray.getJSONObject(i);
+               System.out.println(tmp.get("name"));
+            }
+        } catch (MalformedURLException ex) {
+            System.out.println("Github verkko-osoite on virheellinen.");
+        } catch (ProtocolException ex) {
+            System.out.println("Virheellinen http protokolla.");
+        } catch (IOException ex) {
+            System.out.println("Http pyyntö epäonnistui.");
+        }
+    }
+
+    public static String loadTagsFromGithubAsJson() throws MalformedURLException, ProtocolException, IOException {
+        URL url = new URL(GIT_API_URL);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        int status = connection.getResponseCode();
+        StringBuffer content = new StringBuffer();
+
+        if(status == 200) {
+            BufferedReader httpReader = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+
+            String inputLine = "";
+            while((inputLine = httpReader.readLine()) != null) {
+                content.append(inputLine);
+            }
+            httpReader.close();
+        }
+
+        connection.disconnect();
+        return content.toString();
+    }
+
+    public static boolean ghostCanReadPdf(File pdfFile) {
+        boolean canRead = true;
+
+        try {
+            PDFDocument document = new PDFDocument();
+            document.load(pdfFile);
+        } catch(IOException ex) {
+            canRead = false;
+        }
+
+        return canRead;
     }
     
 }
