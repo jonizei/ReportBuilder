@@ -67,11 +67,8 @@ public class SettingsReader {
      * Color threshold. Used when checking if pixel is colored or grayscale
      */
     private int colorThreshold;
-    
-    /**
-     * Boolean which tells if debugging is enabled
-     */
-    private boolean enableDebug;
+
+    private int debugLevel;
     
     /**
      * Class that contains all the paper sizes used in this program
@@ -89,7 +86,7 @@ public class SettingsReader {
         this.heightThreshold = 0;
         this.widthThreshold = 0;
         this.colorThreshold = 0;
-        this.enableDebug = false;
+        this.debugLevel = 0;
     }
     
     /** 
@@ -118,9 +115,8 @@ public class SettingsReader {
                 this.heightThreshold = getTagIntContent(doc, "height-threshold");
                 this.widthThreshold = getTagIntContent(doc, "width-threshold");
                 this.colorThreshold = getTagIntContent(doc, "color-threshold");
-                
-                String strIsDebug = getTagStrContent(doc, "enable-debug");
-                this.enableDebug = strIsDebug.toLowerCase().equals("true");
+
+                this.debugLevel = getTagIntContent(doc, "debug-level");
                 
                 sizeLibrary = createPaperSizeLibrary(doc);
                 
@@ -456,8 +452,8 @@ public class SettingsReader {
      * 
      * @return enable debug boolean
      */
-    public boolean getEnableDebug() {
-        return this.enableDebug;
+    public int getDebugLevel() {
+        return this.debugLevel;
     }
     
 }

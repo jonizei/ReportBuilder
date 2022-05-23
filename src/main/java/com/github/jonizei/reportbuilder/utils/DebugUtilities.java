@@ -5,8 +5,6 @@
  */
 package com.github.jonizei.reportbuilder.utils;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * This class is used for debugging
@@ -22,25 +21,45 @@ import java.util.List;
  * @author Joni
  */
 public class DebugUtilities {
-    
+
+    private static final int MAX_LEVEL = 5;
+    private static final int MIN_LEVEL = 0;
+
     /**
      * List of debug results
      */
-    public List<String> logs;
-    
+    private List<Pair<Integer, String>> logs;
+
     /**
      * Boolean which tells if debugging is enabled
      */
-    public boolean isDebug;
+    private boolean isDebug;
+
+    private int debugLevel;
     
     /**
      * Constructor for DebugUtilities
      * 
-     * @param isDebug 
+     * @param level
      */
-    public DebugUtilities(boolean isDebug) {
+    public DebugUtilities(int level) {
         this.logs = new ArrayList<>();
-        this.isDebug = isDebug;
+        setDebugLevel(level);
+    }
+
+    public List<Pair<Integer, String>> getLogs() {
+        return this.logs;
+    }
+
+    public void setDebugLevel(int level) {
+        level = level < MIN_LEVEL ? MIN_LEVEL : level;
+        level = level > MAX_LEVEL ? MAX_LEVEL : level;
+
+        this.debugLevel = level;
+    }
+
+    public int getDebugLevel() {
+        return this.debugLevel;
     }
     
     /**
@@ -48,43 +67,34 @@ public class DebugUtilities {
      * 
      * @param text 
      */
-    public void addLog(String text) {
-        logs.add(text);
+    public void addLog(int level, String text, Object... args) {
+        level = level <= MIN_LEVEL ? MIN_LEVEL + 1 : level;
+        logs.add(new Pair<>(level, String.format(text, args)));
+    }
+
+    public void addTimeLog(int level, String text, ElapsedTime elapsedTime) {
+        this.addLog(level, text + " (Time): %dm %ds %,.0fms"
+                , elapsedTime.getMinutes(), elapsedTime.getSeconds(), elapsedTime.getMilliSeconds());
+    }
+
+    private boolean isDebug() {
+        return this.debugLevel > 0;
     }
     
     public void writeLogs(String filename) {
-        if(isDebug) {
+        if(isDebug()) {
             try (BufferedWriter logWriter = new BufferedWriter(
                         new OutputStreamWriter(new FileOutputStream(new File(filename + ".txt"), false), StandardCharsets.UTF_8))) {
-                for(String log : logs) {
-                    logWriter.write(String.format("%s\n", log));
+                for(Pair<Integer, String> log : logs) {
+                    if((int)log.key <= this.debugLevel) {
+                        logWriter.write(String.format("%s\n", log.value));
+                    }
                 }
 
                 logWriter.flush();
             } catch(IOException ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-    
-    /**
-     * Calculates colored pixels in a pdf page
-     * Saves result to a log list
-     * 
-     * @param filename Name of the pdf file
-     * @param pageNum Page number of the pdf file
-     * @param image Pdf page as an image
-     */
-    public void calculateColorPixels(String filename, int pageNum, BufferedImage image) {
-        if(isDebug) {
-            int pixelCounter = 0;
-            for(int i = 0; i < image.getHeight(); i++) {
-                int[] pixelArray = image.getRGB(0, i, image.getWidth(), 1, null, 0, image.getWidth());
-                for(int j = 0; j < pixelArray.length; j++) {
-                    pixelCounter += Utilities.isGrayscale(new Color(pixelArray[j])) ? 0 : 1;
-                }
-            }
-            addLog(String.format("%s : %d : %d", filename, pageNum, pixelCounter));
         }
     }
     

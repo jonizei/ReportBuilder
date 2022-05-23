@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <settings>
     <!-- Polku kansioon, josta raportti luodaan -->
-    <source>D:\Programming\pdfTestFolder\testfolder12</source>
+    <source>D:\Programming\pdfTestFolder\testfolder10</source>
     <!-- Polku kansioon, johon raportti luodaan -->
     <destination>D:\Programming\pdfTestFolder\TestEnv\Results\</destination>
     <!-- Raportti tiedoston nimi -->
-    <reportname>PdfTest_v12</reportname>
+    <reportname>PdfTest_v10_debug</reportname>
     <!-- Tarkistetaanko sivun väri true/false -->
     <ignore-color>false</ignore-color>
     <!-- Korkeuden toleranssi millimetreinä -->
@@ -18,8 +18,8 @@
     luetaan mustavalkoisena -->
     <color-threshold>5</color-threshold>
 
-    <!-- Käytetään testaukseen pidä arvo 'false' -->
-    <enable-debug>false</enable-debug>
+    <!-- Käytetään testaukseen pidä arvo '0' -->
+    <debug-level>5</debug-level>
 
     <!-- Käytettävät raportti kategoriat -->
     <paper-settings>

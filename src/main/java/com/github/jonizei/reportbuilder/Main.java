@@ -7,6 +7,8 @@ package com.github.jonizei.reportbuilder;
 
 import com.github.jonizei.reportbuilder.builder.ReportBuilder;
 import com.github.jonizei.reportbuilder.builder.SettingsReader;
+import com.github.jonizei.reportbuilder.utils.ElapsedTime;
+import com.github.jonizei.reportbuilder.utils.Timer;
 import com.github.jonizei.reportbuilder.utils.Utilities;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -32,8 +34,9 @@ public class Main {
         
         Scanner scan = new Scanner(System.in);
         SettingsReader reader = new SettingsReader();
+        Timer timer = new Timer();
         
-        long startTime = System.nanoTime();
+        timer.start("ART");
         
         if(reader.readXml("./settings.xml")) {
             if(!reader.getSourcePath().equals("") && !reader.getDestinationPath().equals("") && !reader.getReportName().equals("")) {
@@ -53,7 +56,8 @@ public class Main {
                                 , reader.ignoreColor()
                                 , reader.getHeightThreshold()
                                 , reader.getWidthThreshold()
-                                , reader.getEnableDebug()
+                                , reader.getDebugLevel()
+                                , reader.getColorThreshold()
                         );
                         builder.load(reader.getSourcePath());
                         builder.build(reader.getDestinationPath(), reader.getReportName());
@@ -65,16 +69,10 @@ public class Main {
             else System.out.println("Tarvittavia tietoja puuttuu. Päivitä settings.xml tiedosto.");
         }
         else System.out.println("Tiedostoa ei löydy: settings.xml");
+
+        ElapsedTime elapsedTime = timer.stop("ART");
         
-        long finishTime = System.nanoTime();
-        long elapsedTime = finishTime - startTime;
-        double timeInSeconds = elapsedTime * 0.000000001;
-        int minutes = (int) Math.floor(timeInSeconds / 60);
-        int seconds = (int) timeInSeconds - (minutes * 60);
-        
-        DecimalFormat df = new DecimalFormat("#.##");
-        
-        System.out.printf("Aikaa kului: %d minuuttia %d sekuntia\n", minutes, seconds);
+        System.out.printf("Aikaa kului: %d minuuttia %d sekuntia\n", elapsedTime.getMinutes(), elapsedTime.getSeconds());
         
         System.out.println("Paina mitä tahansa näppäintä jatkaaksesi...");
         scan.nextLine();

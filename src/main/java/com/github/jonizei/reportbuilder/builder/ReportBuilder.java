@@ -5,11 +5,9 @@
  */
 package com.github.jonizei.reportbuilder.builder;
 
-import com.github.jonizei.reportbuilder.utils.DebugUtilities;
-import com.github.jonizei.reportbuilder.utils.PaperCategory;
-import com.github.jonizei.reportbuilder.utils.PaperSizeLibrary;
-import com.github.jonizei.reportbuilder.utils.PdfPageCropper;
-import com.github.jonizei.reportbuilder.utils.Utilities;
+import com.github.jonizei.reportbuilder.utils.*;
+import com.github.jonizei.reportutils.utils.ReportBuilderJNI;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -49,7 +47,7 @@ import org.ghost4j.document.PSDocument;
  * @version 2022-01-03
  */
 public class ReportBuilder {
-    
+
     /**
      * Name of the temporary ps file
      */
@@ -113,6 +111,12 @@ public class ReportBuilder {
     private HashMap<String, String> errorLogs;
     
     private DebugUtilities debugUtils;
+
+    private int colorThreshold;
+
+    private ReportBuilderJNI reportBuilderJNI;
+
+    private Timer timer;
     
     /**
      * Constructor assigns given parameters to class
@@ -130,7 +134,8 @@ public class ReportBuilder {
             , boolean ignoreColor
             , int heightThreshold
             , int widthThreshold
-            , boolean enableDebug) {
+            , int debugLevel
+            , int colorThreshold) {
         this.sizeLibrary = sizeLibrary;
         this.ignoreColor = ignoreColor;
         this.heightThreshold = heightThreshold;
@@ -138,7 +143,10 @@ public class ReportBuilder {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         this.pageCropper = new PdfPageCropper();
         this.errorLogs = new HashMap<>();
-        this.debugUtils = new DebugUtilities(enableDebug);
+        this.debugUtils = new DebugUtilities(debugLevel);
+        this.colorThreshold = colorThreshold;
+        this.reportBuilderJNI = new ReportBuilderJNI();
+        this.timer = new Timer();
     }
     
     /**
@@ -154,7 +162,7 @@ public class ReportBuilder {
         if(folder.isDirectory()) {
             fileEntries = new ArrayList<>();
             List<File> subfolders = findAllSubFolders(folder);
-            loadFolder(folder);
+            subfolders.add(folder);
             
             for(File dir : subfolders) {
                 System.out.println("Käsitellään alikansiota");
@@ -201,7 +209,7 @@ public class ReportBuilder {
      * @throws IOException 
      */
     private void loadFolder(File folder) throws IOException {
-        
+
         File[] listOfFiles = folder.listFiles();
 
         int maxFiles = listOfFiles.length;
@@ -219,7 +227,11 @@ public class ReportBuilder {
                     
                     try {
                         pdfFileEntry = new PdfFileEntry(fileEntry.getPath(), fileEntry.getName(), fileEntry.getExtension());
+
+                        timer.start("PAPT");
                         processAllPdfPages(file, pdfFileEntry);
+                        debugUtils.addTimeLog(4, "All pages process", timer.stop("PAPT"));
+
                         fileEntries.add(pdfFileEntry);
                     } catch(Exception ex) {
                         System.out.println(String.format("Ongelma tiedoston käsittelyssä: %s", file.getName()));
@@ -253,18 +265,25 @@ public class ReportBuilder {
             return pdfDocumentToImagesWithPdfBox(pdfFile);
         }
 
+        timer.start("PDCT");
         PDFDocument document = new PDFDocument();
 
         SimpleRenderer renderer = new SimpleRenderer();
         renderer.setResolution(72);
         
-        File tempPdf = convertPDF(pdfFile);
-        document.load(tempPdf);
+        //File tempPdf = convertPDF(pdfFile);
+        //document.load(tempPdf);
+
+        document.load(pdfFile);
+
+        debugUtils.addTimeLog(2, "PDF conversion", timer.stop("PDCT"));
         
         List<Image> images = new ArrayList<>();
         
         try {
+            timer.start("PTIRT");
             images = renderer.render(document);
+            debugUtils.addTimeLog(2, String.format("File: %s, Pages to images render", pdfFile.getName()), timer.stop("PTIRT"));
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -273,8 +292,13 @@ public class ReportBuilder {
         return images.toArray(arrImages);
     }
 
+    private Image[] ghost4jRenderImages() {
+        return null;
+    }
+
     private Image[] pdfDocumentToImagesWithPdfBox(File pdfFile) {
 
+        timer.start("PBRT");
         List<BufferedImage> buffImages = new ArrayList<>();
 
         try {
@@ -294,6 +318,9 @@ public class ReportBuilder {
         List<Image> images = buffImages.stream()
                 .map(bImg -> (Image)bImg)
                 .collect(Collectors.toList());
+
+        debugUtils.addTimeLog(2, "Pdfbox renderer", timer.stop("PBRT"));
+
         return images.toArray(new Image[images.size()]);
     }
     
@@ -400,15 +427,17 @@ public class ReportBuilder {
      * @throws IOException 
      */
     private void processAllPdfPages(File originalFile, PdfFileEntry fileEntry) throws Exception {
-        
+
+        timer.start("PLT");
         PDDocument document = Loader.loadPDF(originalFile);
+        debugUtils.addTimeLog(5, "Pdf loader", timer.stop("PLT"));
 
         Image[] allPages = pdfDocumentToImages(originalFile);
         
         for(int i = 0; i < allPages.length; i++) {
             BufferedImage pageImg = (BufferedImage) allPages[i];
 
-            debugUtils.calculateColorPixels(fileEntry.getName(), i+1, pageImg);
+            //debugUtils.calculateColorPixels(fileEntry.getName(), i+1, pageImg);
             
             PdfPageEntry newPage = processPdfPage(fileEntry, pageImg, i+1);
             newPage.setAnnotations(getArrayOfAnnotations(document.getPage(i)));
@@ -439,17 +468,22 @@ public class ReportBuilder {
      * @throws IOException 
      */
     private PdfPageEntry processPdfPage(PdfFileEntry parent, BufferedImage pageImg, int pageNumber) throws IOException {
+
+        timer.start("PSPT");
         PdfPageEntry pageEntry = new PdfPageEntry(parent, pageNumber);
         
         pageEntry.setOriginalPaperHeightCategory(new PaperCategory("", PaperSizeLibrary.pixelToMm(pageImg.getHeight()), pageImg.getHeight(), false));
         pageEntry.setOriginalPaperWidthCategory(new PaperCategory("", PaperSizeLibrary.pixelToMm(pageImg.getWidth()), pageImg.getWidth(), false));
-        
+
+        timer.start("PICT");
         pageImg = pageCropper.cropPage(pageImg, CROP_MARGIN);
+        debugUtils.addTimeLog(1, "Page cropper process", timer.stop("PICT"));
         
         pageEntry.setExactPaperHeightCategory(new PaperCategory("", PaperSizeLibrary.pixelToMm(pageImg.getHeight()), pageImg.getHeight(), false));
         pageEntry.setExactPaperWidthCategory(new PaperCategory("", PaperSizeLibrary.pixelToMm(pageImg.getWidth()), pageImg.getWidth(), false));
         
         addPaperCategories(pageEntry, pageImg.getWidth(), pageImg.getHeight());
+        debugUtils.addTimeLog(1, "Paper size process", timer.stop("PSPT"));
         
         if(!ignoreColor) {
             try {
@@ -490,7 +524,11 @@ public class ReportBuilder {
     private PageColor getPageColor(BufferedImage img) {
        
         int[] pxArray = imageToIntArray(img);
-        boolean isGrayscale = processPxArray(pxArray);
+        timer.start("PCCT");
+        //boolean isGrayscale = processPxArray(pxArray);
+        boolean isGrayscale = !this.reportBuilderJNI.isColored(pxArray, colorThreshold);
+        debugUtils.addTimeLog(1, "Page color check", timer.stop("PCCT"));
+
         img.flush();
         
         return isGrayscale ? PageColor.GRAYSCALE : PageColor.COLORED;
@@ -528,12 +566,16 @@ public class ReportBuilder {
     private int[] imageToIntArray(BufferedImage img) {
         int width = img.getWidth();
         int height = img.getHeight();
-        
+
+        timer.start("ITACT");
+
         int[] pxArray = img.getRGB(0, 0, width, height, null, 0, width);
         List<Integer> pxList = Arrays.stream(pxArray).boxed().collect(Collectors.toList());
         Collections.shuffle(pxList);
         pxArray = pxList.stream().mapToInt(i -> i).toArray();
-        
+
+        debugUtils.addTimeLog(3, "Image to array conversion", timer.stop("ITACT"));
+
         return pxArray;
     }
     
@@ -879,6 +921,6 @@ public class ReportBuilder {
             System.out.println(path + reportName + "_errorLogs.txt");
         }
         
-        debugUtils.writeLogs(path + "debug_log");
+        debugUtils.writeLogs(path + reportName + "_debug_log");
     }
 }

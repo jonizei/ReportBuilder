@@ -63,6 +63,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>com.github.jonizei</groupId>
+            <artifactId>reportbuilder-utils</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
