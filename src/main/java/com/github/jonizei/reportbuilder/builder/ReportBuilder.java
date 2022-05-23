@@ -257,9 +257,8 @@ public class ReportBuilder {
 
         SimpleRenderer renderer = new SimpleRenderer();
         renderer.setResolution(72);
-        
-        File tempPdf = convertPDF(pdfFile);
-        document.load(tempPdf);
+
+        document.load(pdfFile);
         
         List<Image> images = new ArrayList<>();
         
@@ -407,8 +406,6 @@ public class ReportBuilder {
         
         for(int i = 0; i < allPages.length; i++) {
             BufferedImage pageImg = (BufferedImage) allPages[i];
-
-            debugUtils.calculateColorPixels(fileEntry.getName(), i+1, pageImg);
             
             PdfPageEntry newPage = processPdfPage(fileEntry, pageImg, i+1);
             newPage.setAnnotations(getArrayOfAnnotations(document.getPage(i)));
