@@ -4,27 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73163d70-40c5-465d-b9bf-d818904ccc7c" name="Changes" comment="">
+    <list default="true" id="73163d70-40c5-465d-b9bf-d818904ccc7c" name="Changes" comment="Hotfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/commons-beanutils-1.9.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/commons-collections-3.2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/commons-io-1.3.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/commons-lang3-3.9.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/commons-logging-1.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/fontbox-3.0.0-RC1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/ghost4j-1.0.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/itext-2.1.7.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/jna-4.1.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/log4j-1.2.17.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/pdfbox-3.0.0-RC1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/reportbuilder-1.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/xmlgraphics-commons-1.4.jar" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +21,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature-performance" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -63,6 +50,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "D:/Programming/NetBeansProjects/reportbuilder/target/classes",
+    "node.js.selected.package.tslint": "(autodetect)",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
@@ -90,6 +78,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -136,52 +125,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>308</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>309</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>332</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>333</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>338</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>337</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>366</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>373</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>341</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>265</line>
+          <line>264</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>

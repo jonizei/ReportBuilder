@@ -162,8 +162,7 @@ public class ReportBuilder {
             }
         }
         else System.out.println("Kansiota ei löydy");
-        
-        removeTempFiles();
+
     }
     
     /**
@@ -294,98 +293,6 @@ public class ReportBuilder {
                 .map(bImg -> (Image)bImg)
                 .collect(Collectors.toList());
         return images.toArray(new Image[images.size()]);
-    }
-    
-    /**
-     * Convert PDF to PS file and back to PDF
-     * This ensures that the PDF file is in right format
-     * for the ghost4j image conversion
-     * 
-     * @param pdfFile PDF file to be converted
-     * @return Converted PDF file
-     */
-    private File convertPDF(File pdfFile) {
-        File tempFile = null;
-        tempFile = convertPDFtoPS(pdfFile);
-        tempFile = convertPStoPDF(tempFile);
-        return tempFile;
-    }
-    
-    private void removeTempFiles() {
-        File tmpPs = new File(TEMP_PS);
-        File tmpPdf = new File(TEMP_PDF);
-        
-        if(tmpPs.exists()) tmpPs.delete();
-        if(tmpPdf.exists()) tmpPdf.delete();
-    }
-    
-    /**
-     * Converts PDF file to PS file
-     * 
-     * @param pdfFile PDF file to be converted
-     * @return New PS file
-     */
-    private File convertPDFtoPS(File pdfFile) {
-        FileOutputStream fos = null;
-        File tempPs = new File(TEMP_PS);
-        
-        try {
-            PDFDocument document = new PDFDocument();
-            document.load(pdfFile);
-
-            fos = new FileOutputStream(tempPs);
-            
-            PSConverter converter = new PSConverter();
-            converter.convert(document, fos);
-            
-        }catch(Exception ex) {
-            ex.printStackTrace();
-        }finally {
-            if(fos != null) {
-                try {
-                    fos.close();
-                }catch(IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        
-        return tempPs;
-    }
-    
-    /**
-     * Converts PS file to PDF file
-     * 
-     * @param psFile PS file to be converted
-     * @return New PDF file
-     */
-    private File convertPStoPDF(File psFile) {
-        FileOutputStream fos = null;
-        File tempPdf = new File(TEMP_PDF);
-        
-        try {
-            PSDocument document = new PSDocument();
-            document.load(psFile);
-            
-            fos = new FileOutputStream(tempPdf);
-            
-            PDFConverter converter = new PDFConverter();
-            converter.setPDFSettings(PDFConverter.OPTION_PDFSETTINGS_PREPRESS);
-            converter.convert(document, fos);
-            
-        }catch(Exception ex) {
-            ex.printStackTrace();
-        }finally {
-            if(fos != null) {
-                try {
-                    fos.close();
-                }catch(IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        
-        return tempPdf;
     }
     
     /** 
