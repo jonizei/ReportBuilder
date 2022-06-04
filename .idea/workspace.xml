@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73163d70-40c5-465d-b9bf-d818904ccc7c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_06_2022_13_35_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_06_2022_13_35_[Changes]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_06_2022_13_35__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launch4j/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/launch4j/config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/SettingsReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/SettingsReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,47 +120,47 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>309</line>
+          <line>297</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>310</line>
+          <line>298</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>333</line>
+          <line>321</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>334</line>
+          <line>322</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>339</line>
+          <line>327</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>338</line>
+          <line>326</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>367</line>
+          <line>355</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>374</line>
+          <line>362</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/github/jonizei/reportbuilder/builder/ReportBuilder.java</url>
-          <line>342</line>
+          <line>330</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>

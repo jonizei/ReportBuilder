@@ -53,7 +53,6 @@ public class Main {
                                 , reader.ignoreColor()
                                 , reader.getHeightThreshold()
                                 , reader.getWidthThreshold()
-                                , reader.getEnableDebug()
                         );
                         builder.load(reader.getSourcePath());
                         builder.build(reader.getDestinationPath(), reader.getReportName());

@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>console</headerType>
   <jar>D:\Programming\NetBeansProjects\reportbuilder\target\reportbuilder-1.0.jar</jar>
-  <outfile>D:\Programming\NetBeansProjects\reportbuilder\target\ReportBuilder.exe</outfile>
+  <outfile>D:\Programming\NetBeansProjects\reportbuilder\target\ReportBuilder-v1.3.4.6.exe</outfile>
   <errTitle>This programe requires java. Please install java first.</errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -45,16 +45,16 @@
     <maxHeapSize>2048</maxHeapSize>
   </jre>
   <versionInfo>
-    <fileVersion>1.3.4.5</fileVersion>
-    <txtFileVersion>1.3.4.5</txtFileVersion>
+    <fileVersion>1.3.4.6</fileVersion>
+    <txtFileVersion>1.3.4.6</txtFileVersion>
     <fileDescription>Report Builder for PDF files</fileDescription>
     <copyright>NIL</copyright>
-    <productVersion>1.3.4.5</productVersion>
-    <txtProductVersion>1.3.4.5</txtProductVersion>
+    <productVersion>1.3.4.6</productVersion>
+    <txtProductVersion>1.3.4.6</txtProductVersion>
     <productName>ReportBuilder</productName>
     <companyName></companyName>
     <internalName>ReportBuilder</internalName>
-    <originalFilename>ReportBuilder.exe</originalFilename>
+    <originalFilename>ReportBuilder-v1.3.4.6.exe</originalFilename>
     <trademarks></trademarks>
     <language>FINNISH</language>
   </versionInfo>

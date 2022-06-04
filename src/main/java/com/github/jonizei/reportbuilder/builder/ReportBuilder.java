@@ -51,16 +51,6 @@ import org.ghost4j.document.PSDocument;
 public class ReportBuilder {
     
     /**
-     * Name of the temporary ps file
-     */
-    private final static String TEMP_PS = "tempPs.ps";
-    
-    /**
-     * Name of the temporary pdf file
-     */
-    private final static String TEMP_PDF = "tempPdf.pdf";
-    
-    /**
      * Class that contains all the paper sizes used in this program
      */
     private PaperSizeLibrary sizeLibrary;
@@ -123,14 +113,12 @@ public class ReportBuilder {
      * @param sizeLibrary
      * @param ignoreColor
      * @param heightThreshold
-     * @param widthThreshold 
-     * @param enableDebug
+     * @param widthThreshold
      */
     public ReportBuilder(PaperSizeLibrary sizeLibrary
             , boolean ignoreColor
             , int heightThreshold
-            , int widthThreshold
-            , boolean enableDebug) {
+            , int widthThreshold) {
         this.sizeLibrary = sizeLibrary;
         this.ignoreColor = ignoreColor;
         this.heightThreshold = heightThreshold;
@@ -138,7 +126,7 @@ public class ReportBuilder {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         this.pageCropper = new PdfPageCropper();
         this.errorLogs = new HashMap<>();
-        this.debugUtils = new DebugUtilities(enableDebug);
+        this.debugUtils = new DebugUtilities(false);
     }
     
     /**
