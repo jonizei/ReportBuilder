@@ -430,7 +430,7 @@ public class Utilities {
         try {
             PDFDocument document = new PDFDocument();
             document.load(pdfFile);
-        } catch(IOException ex) {
+        } catch(Exception ex) {
             canRead = false;
         }
 

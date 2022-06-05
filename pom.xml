@@ -50,6 +50,11 @@
     
     <repositories>
         <repository>
+            <id>org.bouncycastle.repository.releases</id>
+            <name>Bouncycastle releases</name>
+            <url>https://repo1.maven.org/maven2/org/bouncycastle/</url>
+        </repository>
+        <repository>
                 <id>org.ghost4j.repository.releases</id>
                 <name>Ghost4J releases</name>
                 <url>http://repo.ghost4j.org/maven2/releases</url>
@@ -78,7 +83,7 @@
             <artifactId>pdfbox</artifactId>
             <version>3.0.0-RC1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/bouncycastle/bcprov-jdk16 -->
+        <!-- https://mvnrepository.com/artifact/bouncycastle/bcprov-jdk18on -->
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
@@ -90,5 +95,6 @@
             <artifactId>json</artifactId>
             <version>20220320</version>
         </dependency>
+
     </dependencies>
 </project>

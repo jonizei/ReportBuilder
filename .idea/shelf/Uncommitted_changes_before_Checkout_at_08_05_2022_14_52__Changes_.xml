@@ -1,9 +1,0 @@
-<changelist name="Uncommitted_changes_before_Checkout_at_08_05_2022_14_52_[Changes]" date="1652010854570" recycled="true" deleted="true">
-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_05_2022_14_52_[Changes]/shelved.patch" />
-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/05/2022 14.52 [Changes]" />
-  <binary>
-    <option name="BEFORE_PATH" value="target/reportbuilder-1.0.jar" />
-    <option name="AFTER_PATH" value="target/reportbuilder-1.0.jar" />
-    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_05_2022_14_52_[Changes]/reportbuilder-1.0.jar" />
-  </binary>
-</changelist>

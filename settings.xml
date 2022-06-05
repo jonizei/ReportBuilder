@@ -5,7 +5,7 @@
     <!-- Polku kansioon, johon raportti luodaan -->
     <destination>D:\Programming\pdfTestFolder\TestEnv\Results\</destination>
     <!-- Raportti tiedoston nimi -->
-    <reportname>PdfTest_v10_test</reportname>
+    <reportname>ErrorTest_v1</reportname>
     <!-- Tarkistetaanko sivun väri true/false -->
     <ignore-color>false</ignore-color>
     <!-- Korkeuden toleranssi millimetreinä -->

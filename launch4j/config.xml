@@ -32,6 +32,8 @@
     <cp>lib/pdfbox-3.0.0-RC1.jar</cp>
     <cp>lib/fontbox-3.0.0-RC1.jar</cp>
     <cp>lib/commons-logging-1.2.jar</cp>
+    <cp>lib/bcprov-jdk16-140.jar</cp>
+    <cp>lib/json-20220320</cp>
   </classPath>
   <jre>
     <path></path>
