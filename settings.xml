@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <settings>
     <!-- Polku kansioon, josta raportti luodaan -->
-    <source>D:\Programming\pdfTestFolder\testfolder10</source>
+    <source>D:\Programming\pdfTestFolder\lagisiakuveita\TonttiKuveita\LagisetKuveet</source>
     <!-- Polku kansioon, johon raportti luodaan -->
     <destination>D:\Programming\pdfTestFolder\TestEnv\Results\</destination>
     <!-- Raportti tiedoston nimi -->
-    <reportname>ErrorTest_v1</reportname>
+    <reportname>LagisetKuveet_v3</reportname>
     <!-- Tarkistetaanko sivun väri true/false -->
     <ignore-color>false</ignore-color>
     <!-- Korkeuden toleranssi millimetreinä -->
-    <height-threshold>50</height-threshold>
+    <height-threshold>5</height-threshold>
     <!-- Leveyden toleranssi millimetreinä -->
     <width-threshold>50</width-threshold>
     <!-- Väri toleranssi -->
