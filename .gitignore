@@ -3,5 +3,5 @@
 .settings/
 target/
 *.class
-.idea/workspace.xml
+.idea/
 settings.xml
