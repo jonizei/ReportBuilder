@@ -341,7 +341,7 @@ public class ReportBuilder {
         pageEntry.setExactPaperHeightCategory(new PaperCategory("", PaperSizeLibrary.pixelToMm(pageImg.getHeight()), pageImg.getHeight(), false));
         pageEntry.setExactPaperWidthCategory(new PaperCategory("", PaperSizeLibrary.pixelToMm(pageImg.getWidth()), pageImg.getWidth(), false));
         
-        addPaperCategories(pageEntry, pageImg.getWidth(), pageImg.getHeight());
+        addPaperCategories(pageEntry, pageImg.getHeight(), pageImg.getWidth());
         
         if(!ignoreColor) {
             try {
