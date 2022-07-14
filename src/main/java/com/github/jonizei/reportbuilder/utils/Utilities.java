@@ -195,7 +195,7 @@ public class Utilities {
     }
     
     /**
-     * Static method finds the closest category for the paper size
+     * Static method finds the closest height category for the paper size
      * 
      * @param width Width of the paper
      * @param height Height of the paper
@@ -203,10 +203,10 @@ public class Utilities {
      * @param heightOffset height offset to modify the strictness of the search
      * @return Closest height category
      */
-    public static PaperCategory findClosestCategory(int width, int height, int widthOffset, int heightOffset) {
+    public static PaperCategory findClosestHeightCategory(int width, int height, int heightOffset) {
         PaperCategory closestCategory = null;
         PaperCategory foundCategory = Utilities.findPaperCategory(sizeLibrary.getPaperHeightCategories(), height, heightOffset);
-        PaperCategory foundCategory2 = Utilities.findPaperCategory(sizeLibrary.getPaperHeightCategories(), width, widthOffset);
+        PaperCategory foundCategory2 = Utilities.findPaperCategory(sizeLibrary.getPaperHeightCategories(), width, heightOffset);
         
         if(foundCategory != null && foundCategory2 != null) {
             if(foundCategory.equals(foundCategory2)) {
@@ -224,6 +224,53 @@ public class Utilities {
         }
         
         return closestCategory;
+    }
+
+    /**
+     * Tries to find closest height category using image width.
+     *
+     * @param imgWidth
+     * @param imgHeight
+     * @param heightOffset
+     * @return Found PaperCategory or null
+     */
+    public static PaperCategory findClosestHeightCategoryByImageWidth(int imgWidth, int imgHeight, int heightOffset) {
+        PaperCategory heightCategory = findStrictHeightCategory(imgWidth, heightOffset);
+        PaperCategory closestHeightCategory = findClosestHeightCategory(imgWidth, imgHeight, heightOffset);
+
+        if (heightCategory != null && closestHeightCategory != null) {
+            if (closestHeightCategory.getPaperSizePx() < heightCategory.getPaperSizePx()) {
+                heightCategory = closestHeightCategory;
+            }
+        } else if (closestHeightCategory != null) {
+            heightCategory = closestHeightCategory;
+        }
+
+        return heightCategory;
+    }
+
+    /**
+     * Tries to find the closest height category using image height and image width
+     * and selects the smaller one.
+     *
+     * @param imgWidth
+     * @param imgHeight
+     * @param heightOffset
+     * @return Found PaperCategory or null
+     */
+    public static PaperCategory findHeightCategory(int imgWidth, int imgHeight, int heightOffset) {
+        PaperCategory heightCategory = findStrictHeightCategory(imgHeight, heightOffset);
+        PaperCategory heightCategoryByImgWidth = findClosestHeightCategoryByImageWidth(imgWidth, imgHeight, heightOffset);
+
+        if (heightCategory != null && heightCategoryByImgWidth != null) {
+            if (heightCategoryByImgWidth.getPaperSizePx() < heightCategory.getPaperSizePx()) {
+                heightCategory = heightCategoryByImgWidth;
+            }
+        } else if(heightCategoryByImgWidth != null) {
+            heightCategory = heightCategoryByImgWidth;
+        }
+
+        return heightCategory;
     }
     
     /**

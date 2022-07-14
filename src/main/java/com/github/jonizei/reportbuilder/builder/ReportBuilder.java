@@ -443,14 +443,11 @@ public class ReportBuilder {
      * @param imgWidth Width of the page image
      */
     private void addPaperCategories(PdfPageEntry pdfEntry, int imgHeight, int imgWidth) {
-       
+
         int heightOffset = PaperSizeLibrary.mmToPixel(heightThreshold);
         int widthOffset = PaperSizeLibrary.mmToPixel(widthThreshold);
-         
-        PaperCategory heightCategory = Utilities.findStrictHeightCategory(imgHeight, heightOffset);
-        heightCategory = heightCategory == null ? Utilities.findStrictHeightCategory(imgWidth, heightOffset) : heightCategory;
-        heightCategory = heightCategory == null ? Utilities.findClosestCategory(imgWidth, imgHeight, widthOffset, heightOffset) : heightCategory;
-        
+
+        PaperCategory heightCategory = Utilities.findHeightCategory(imgWidth, imgHeight, heightOffset);
         PaperCategory widthCategory = null;
         
         if(heightCategory == null) {
