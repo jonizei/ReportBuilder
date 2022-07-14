@@ -5,3 +5,4 @@ target/
 *.class
 .idea/
 settings.xml
+launch4j
