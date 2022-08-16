@@ -272,7 +272,65 @@ public class Utilities {
 
         return heightCategory;
     }
-    
+
+    private static boolean fitsToPaperSize(int height, int width, int heightOffset, int widthOffset, PaperSize paperSize) {
+
+        int paperHeight = paperSize.getHeightCategory().getPaperSizePx();
+        int paperWidth = paperSize.getWidthCategory().getPaperSizePx();
+
+        boolean heightFits = height < paperHeight + heightOffset;
+        boolean widthFits = width < paperWidth + widthOffset;
+
+        return heightFits && widthFits;
+    }
+
+    public static PaperSize findPaperSize(int height, int width, int heightOffset, int widthOffset) {
+        PaperSize foundPaperSize = null;
+        boolean fits = false;
+        boolean fitsSwapped = false;
+
+        for (PaperSize paperSize : sizeLibrary.getPaperSizes()) {
+            PaperSize swapped = paperSize.swapped();
+
+            fits = fitsToPaperSize(height, width, heightOffset, widthOffset, paperSize);
+            fitsSwapped = fitsToPaperSize(height, width, heightOffset, widthOffset, swapped);
+
+            if (fits && fitsSwapped) {
+                if (height > width) {
+                    foundPaperSize = paperSize;
+                } else {
+                    foundPaperSize = swapped.swapped();
+                }
+            } else if (fits) {
+                foundPaperSize = paperSize;
+            } else if (fitsSwapped) {
+                foundPaperSize = swapped.swapped();
+            }
+
+            if (foundPaperSize != null) {
+                break;
+            }
+        }
+
+        return foundPaperSize == null ? new PaperSize() : foundPaperSize;
+    }
+
+    public static PaperCategory createUnknownPaperCategory(int size) {
+        return new PaperCategory("" + PaperSizeLibrary.pixelToMm(size), PaperSizeLibrary.pixelToMm(size), size, true);
+    }
+
+    public static List<PaperSize> generatePaperSizes() {
+        List<PaperSize> paperSizes = new ArrayList<>();
+
+        for(PaperCategory heightCategory : sizeLibrary.getPaperHeightCategories()) {
+            for(PaperCategory widthCategory : sizeLibrary.getPaperWidthCategories()) {
+                paperSizes.add(new PaperSize(heightCategory, widthCategory));
+            }
+        }
+
+        return paperSizes;
+    }
+
     /**
      * Static method that finds the longest string from a string array
      * 

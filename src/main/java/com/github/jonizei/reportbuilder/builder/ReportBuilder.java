@@ -5,11 +5,8 @@
  */
 package com.github.jonizei.reportbuilder.builder;
 
-import com.github.jonizei.reportbuilder.utils.DebugUtilities;
-import com.github.jonizei.reportbuilder.utils.PaperCategory;
-import com.github.jonizei.reportbuilder.utils.PaperSizeLibrary;
-import com.github.jonizei.reportbuilder.utils.PdfPageCropper;
-import com.github.jonizei.reportbuilder.utils.Utilities;
+import com.github.jonizei.reportbuilder.utils.*;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -447,29 +444,18 @@ public class ReportBuilder {
         int heightOffset = PaperSizeLibrary.mmToPixel(heightThreshold);
         int widthOffset = PaperSizeLibrary.mmToPixel(widthThreshold);
 
-        PaperCategory heightCategory = Utilities.findHeightCategory(imgWidth, imgHeight, heightOffset);
-        PaperCategory widthCategory = null;
+        PaperSize foundPaperSize = Utilities.findPaperSize(imgHeight, imgWidth, heightOffset, widthOffset);
         
-        if(heightCategory == null) {
-            heightCategory = new PaperCategory("" + PaperSizeLibrary.pixelToMm(imgHeight), PaperSizeLibrary.pixelToMm(imgHeight), imgHeight, true);
-            widthCategory = new PaperCategory("" + PaperSizeLibrary.pixelToMm(imgWidth), PaperSizeLibrary.pixelToMm(imgWidth), imgWidth, true);
-        }
-        else {
-            int hDiff = Math.abs(heightCategory.getPaperSizePx() - imgHeight);
-            int wDiff = Math.abs(heightCategory.getPaperSizePx() - imgWidth);
-            
-            int width = hDiff <= wDiff ? imgWidth : imgHeight;
-            
-            widthCategory = Utilities.findPaperCategory(sizeLibrary.getPaperWidthCategories(), width, widthOffset);
-            widthCategory = widthCategory == null 
-                    ? new PaperCategory("" + PaperSizeLibrary.pixelToMm(imgWidth), PaperSizeLibrary.pixelToMm(imgWidth), imgWidth, true) : widthCategory;
-            heightCategory = widthCategory.isUnknown() 
-                    ? new PaperCategory("" + PaperSizeLibrary.pixelToMm(imgHeight), PaperSizeLibrary.pixelToMm(imgHeight), imgHeight, true) : heightCategory;
+        if(foundPaperSize.getHeightCategory() == null || foundPaperSize.getWidthCategory() == null) {
+            foundPaperSize.setHeightCategory(Utilities.createUnknownPaperCategory(imgHeight));
+            foundPaperSize.setWidthCategory(Utilities.createUnknownPaperCategory(imgWidth));
         }
         
-        pdfEntry.setPaperName(sizeLibrary.findPaperName(heightCategory.getPaperSizeMm(), widthCategory.getPaperSizeMm(), heightOffset, widthOffset));
-        pdfEntry.setPaperHeightCategory(heightCategory);
-        pdfEntry.setPaperWidthCategory(widthCategory);
+        pdfEntry.setPaperName(sizeLibrary.findPaperName(foundPaperSize.getHeightCategory().getPaperSizeMm()
+                , foundPaperSize.getWidthCategory().getPaperSizeMm()
+                , heightOffset, widthOffset));
+        pdfEntry.setPaperHeightCategory(foundPaperSize.getHeightCategory());
+        pdfEntry.setPaperWidthCategory(foundPaperSize.getWidthCategory());
         
     }
     

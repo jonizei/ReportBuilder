@@ -137,5 +137,9 @@ public class PaperCategory {
     public boolean equals(PaperCategory category) {
         return category.getPaperSizeMm() == getPaperSizeMm();
     }
+
+    public PaperCategory clone() {
+        return new PaperCategory(this.name, this.sizeMm, this.sizePx, false);
+    }
     
 }

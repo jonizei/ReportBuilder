@@ -5,11 +5,7 @@
  */
 package com.github.jonizei.reportbuilder.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +35,9 @@ public class PaperSizeLibrary {
      * List of all paper names
      */
     private List<NamedPaper> namedPapers;
-    
+
+    private List<PaperSize> paperSizes;
+
     /**
      * Class that contains necessary information for a single named paper size
      */
@@ -135,6 +133,16 @@ public class PaperSizeLibrary {
         }
         
     }
+
+    static class AreaComparator implements Comparator<PaperSize> {
+        public int compare(PaperSize a, PaperSize b) {
+            return a.compareTo(b);
+        }
+    }
+
+    static class HeightComparator implements  Comparator<PaperSize> {
+        public int compare(PaperSize a, PaperSize b) { return a.getHeightCategory().getPaperSizePx() - b.getHeightCategory().getPaperSizePx(); }
+    }
     
     /**
      * Private constructor of PaperSizeLibrary
@@ -143,6 +151,7 @@ public class PaperSizeLibrary {
         heightList = new ArrayList<>();
         widthList = new ArrayList<>();
         namedPapers = new ArrayList<>();
+        paperSizes = new ArrayList<>();
     }
     
     /**
@@ -293,6 +302,20 @@ public class PaperSizeLibrary {
     public static int mmToPixel(int mm) {
         double temp = mm * 72 / 25.4;
         return (int)temp;
+    }
+
+    public List<PaperSize> getPaperSizes() {
+        Collections.sort(paperSizes, new HeightComparator());
+        return paperSizes;
+    }
+
+    public List<PaperSize> getPaperSizesSortArea() {
+        Collections.sort(paperSizes, new AreaComparator());
+        return paperSizes;
+    }
+
+    public void setPaperSizes(List<PaperSize> paperSizes) {
+        this.paperSizes = paperSizes;
     }
     
 }

@@ -7,6 +7,7 @@ package com.github.jonizei.reportbuilder;
 
 import com.github.jonizei.reportbuilder.builder.ReportBuilder;
 import com.github.jonizei.reportbuilder.builder.SettingsReader;
+import com.github.jonizei.reportbuilder.utils.PaperSize;
 import com.github.jonizei.reportbuilder.utils.Utilities;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -45,9 +46,11 @@ public class Main {
                 }
                 else {
                     try {
-                        System.out.println("Luodaan raportti kansiosta: " + reader.getSourcePath());
                         Utilities.setPaperSizeLibrary(reader.getPaperSizeLibrary());
                         Utilities.setColorThreshold(reader.getColorThreshold());
+                        reader.getPaperSizeLibrary().setPaperSizes(Utilities.generatePaperSizes());
+
+                        System.out.println("Luodaan raportti kansiosta: " + reader.getSourcePath());
                         ReportBuilder builder = new ReportBuilder(
                                 reader.getPaperSizeLibrary()
                                 , reader.ignoreColor()
